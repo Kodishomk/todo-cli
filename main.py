@@ -1,70 +1,80 @@
 """
-Quiz App Entry Point
---------------------
-Runs the command-line interface, handles user input validation, and displays results.
+Main Entry Point
+----------------
+Handles user menu rendering, option routing, and input prompting.
+All operational logic delegates directly to the Library class.
 """
 
 import sys
-from quiz import Quiz
+from library import Library
 
 
-def get_valid_choice() -> str:
-    """Prompts the user until a valid letter (A, B, C, or D) is entered."""
-    valid_options = {"A", "B", "C", "D"}
+def get_non_empty_input(prompt: str) -> str:
+    """Helper function to enforce non-blank user input."""
     while True:
-        choice = input("\nYour answer (A-D): ").strip().upper()
-        if choice in valid_options:
-            return choice
-        print("Invalid choice. Please enter A, B, C, or D.")
+        value = input(prompt).strip()
+        if value:
+            return value
+        print("Error: Field cannot be left blank.")
 
 
 def main() -> None:
-    """Main execution loop."""
-    print("==========================================")
-    print("       WELCOME TO THE PYTHON QUIZ APP     ")
-    print("==========================================")
+    """Main CLI program loop."""
+    library = Library()
 
-    try:
-        quiz = Quiz("questions.json")
-    except (FileNotFoundError, ValueError) as err:
-        print(err)
-        sys.exit(1)
+    while True:
+        print("\n=== LIBRARY MANAGEMENT SYSTEM ===")
+        print("1. Add book")
+        print("2. View all books")
+        print("3. Check out a book")
+        print("4. Return a book")
+        print("5. View who has a book")
+        print("6. Quit")
 
-    if not quiz.questions:
-        print("No questions found in questions.json. Exiting.")
-        sys.exit(1)
+        choice = input("\nChoose an option (1-6): ").strip()
 
-    # Question Loop
-    for index, q in enumerate(quiz.questions, 1):
-        print(f"\nQuestion {index}/{len(quiz.questions)}:")
-        print(q.text)
-        for option in q.options:
-            print(f"  {option}")
+        if choice == "1":
+            print("\n--- Add Book ---")
+            title = get_non_empty_input("Enter book title: ")
+            author = get_non_empty_input("Enter author name: ")
+            new_book = library.add_book(title, author)
+            print(f"Added: '{new_book.title}' by {new_book.author}")
 
-        user_choice = get_valid_choice()
-        is_right = quiz.evaluate_answer(q, user_choice)
+        elif choice == "2":
+            print("\n--- Catalog ---")
+            books = library.get_all_books()
+            if not books:
+                print("No books in the library catalog yet.")
+            else:
+                for idx, book in enumerate(books, 1):
+                    status = "Available" if book.is_available else f"Checked out by {book.borrower}"
+                    print(f"[{idx}] '{book.title}' by {book.author} — Status: {status}")
 
-        if is_right:
-            print("Correct!")
+        elif choice == "3":
+            print("\n--- Check Out Book ---")
+            title = get_non_empty_input("Enter book title to check out: ")
+            borrower = get_non_empty_input("Enter borrower's name: ")
+            success, message = library.check_out_book(title, borrower)
+            print(message)
+
+        elif choice == "4":
+            print("\n--- Return Book ---")
+            title = get_non_empty_input("Enter book title to return: ")
+            success, message = library.return_book(title)
+            print(message)
+
+        elif choice == "5":
+            print("\n--- Borrower Lookup ---")
+            title = get_non_empty_input("Enter book title to check: ")
+            success, message = library.get_borrower_info(title)
+            print(message)
+
+        elif choice == "6":
+            print("Goodbye!")
+            sys.exit(0)
+
         else:
-            print("Incorrect.")
-
-    # Final Score & Summary
-    print("\n==========================================")
-    print("              QUIZ COMPLETE               ")
-    print("==========================================")
-    total = len(quiz.questions)
-    percentage = (quiz.score / total) * 100
-    print(f"Final Score: {quiz.score}/{total} ({percentage:.1f}%)")
-
-    if quiz.missed_questions:
-        print("\n--- Review Missed Questions ---")
-        for q, wrong_ans in quiz.missed_questions:
-            print(f"\n• {q.text}")
-            print(f"  Your answer:    {wrong_ans}")
-            print(f"  Correct answer: {q.answer}")
-    else:
-        print("\nPerfect score! Excellent work!")
+            print("Error: Invalid option. Please enter a number between 1 and 6.")
 
 
 if __name__ == "__main__":

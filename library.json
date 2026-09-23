@@ -1,0 +1,14 @@
+[
+    {
+        "title": "22 immutable laws of marketing",
+        "author": "john dev",
+        "is_available": true,
+        "borrower": null
+    },
+    {
+        "title": "the prince",
+        "author": "machaeveli",
+        "is_available": false,
+        "borrower": "john"
+    }
+]
