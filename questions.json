@@ -1,0 +1,27 @@
+[
+    {
+        "text": "Which built-in Python module is used for handling JSON data?",
+        "options": ["A) os", "B) json", "C) sys", "D) requests"],
+        "answer": "B"
+    },
+    {
+        "text": "What keyword is used to define a class method constructor in Python?",
+        "options": ["A) def", "B) __init__", "C) class", "D) self"],
+        "answer": "B"
+    },
+    {
+        "text": "Which third-party library is used to parse HTML DOM structures in Python?",
+        "options": ["A) requests", "B) beautifulsoup4", "C) csv", "D) json"],
+        "answer": "B"
+    },
+    {
+        "text": "What type of error is raised when a requested key is not found in a dictionary?",
+        "options": ["A) TypeError", "B) ValueError", "C) KeyError", "D) IndexError"],
+        "answer": "C"
+    },
+    {
+        "text": "Which HTTP method is typically used to fetch resources from a web API?",
+        "options": ["A) POST", "B) DELETE", "C) PUT", "D) GET"],
+        "answer": "D"
+    }
+]
